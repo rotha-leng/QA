@@ -7,7 +7,7 @@ app.config['SECRET_KEY'] = '!loveyou@ll'
 
 
 DB_USER = 'postgres'  # database user
-DB_PWD = '2001'  # database password
+DB_PWD = 'biiiriiiniii13'  # database password
 DB_NAME = 'qadb'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://%s:%s@localhost:5432/%s" % (DB_USER, DB_PWD, DB_NAME)

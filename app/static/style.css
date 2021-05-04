@@ -1,0 +1,36 @@
+h1 {
+    border: 2px #eee solid;
+    color: brown;
+    text-align: center;
+    padding: 10px;
+}
+
+.errors {
+	list-style: none !important;
+	margin: 0;
+	padding-left: 0;
+}
+.errors li {
+	color: red;
+	font-size: 11px;
+}
+
+.post-date {
+	font-size: 12px;
+	color: #4e4343;
+}
+/* Login */
+#login .container #login-row #login-column #login-box {
+  margin-top: 120px;
+  max-width: 600px;
+  height: 320px;
+  border: 1px solid #9C9C9C;
+  background-color: #EAEAEA;
+}
+#login .container #login-row #login-column #login-box #login-form {
+  padding: 20px;
+}
+#login .container #login-row #login-column #login-box #login-form #register-link {
+  margin-top: -85px;
+}
+

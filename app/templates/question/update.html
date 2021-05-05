@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+	<h2>New Post</h2>
+	<hr>
+	 {% for post in posts %}
+	     <a href="{{ url_for('getPost', postid=post['ID']) }}">
+	         <h2>{{ post['Title'] }}</h2>
+	     </a>
+	     <span class="post-date">{{ post['Created'].split(' ')[0] }}</span>
+	     <p>{{ post['Content']|safe }}</p>
+	     <span class="post-author">By - {{ post['AuthorName'] }}</span>
+	     <hr>
+	 {% endfor %}
+
+
+{% endblock %}
+

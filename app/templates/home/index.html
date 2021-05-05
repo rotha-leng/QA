@@ -6,48 +6,9 @@
     <title>Project_Flask</title>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}">">
     <script src="https://kit.fontawesome.com/d118e75654.js" crossorigin="anonymous"></script>
-    <style>
-        h1 {
-        font-family: Segoe UI,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
-        font-weight: 700;
-        color: #031b4e;
-        font-size: 30px;
-        letter-spacing: -1px;
-        line-height: 1.2;
-        text-align: center;
-        word-break: break-word;
+    
 
-    }  
-    p {
-        font-family: Segoe UI,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
-        color: #031b4e;
-        letter-spacing: -1px;
-        line-height: 1.2;
-        text-align: center;
-        word-break: break-word;
-
-    }  
-    .form-inline input{
-        width: 500px;
-        margin: 0px 0px 0px 200px;
-        
-    }
-    i{
-        color:#0085ff ;
-        padding: 10px;
-    }
-    h3{
-        font-family: Segoe UI,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
-        color: #031b4e;
-        letter-spacing: -1px;
-        line-height: 1.2;
-        text-align: center;
-        word-break: break-word;
-
-
-    }
-
-    </style>
+    
 </head>
 <body>
 
@@ -63,9 +24,9 @@
               </nav><br>
               
             <div>
-                <p>{{totalQA}}Questions<button type="button" class="btn btn-primary" style="width: 140px; margin: 20px 200px 20px 20px;" >As a Questions</button> 
-                    All <i class="fas fa-chevron-circle-down"> </i>
-                    More Resecent <i class="fas fa-chevron-circle-down"> </i>
+                <p>{{totalQA}}Questions<a href="/ask"><button type="button" class="btn btn-primary" style="width: 140px; margin: 20px 200px 20px 20px;" >As a Questions</button> </a>
+                    All <i class="fas fa-chevron-circle-down" style="padding: 10px;"> </i>
+                    More Resecent <i class="fas fa-chevron-circle-down"  style="padding: 10px;"> </i>
 
                 </p>
                 {% for question in posts%}

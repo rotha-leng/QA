@@ -11,7 +11,7 @@
         font-family: Segoe UI,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
         font-weight: 700;
         color: #031b4e;
-        font-size: 44px;
+        font-size: 30px;
         letter-spacing: -1px;
         line-height: 1.2;
         text-align: center;
@@ -36,6 +36,16 @@
         color:#0085ff ;
         padding: 10px;
     }
+    h3{
+        font-family: Segoe UI,Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+        color: #031b4e;
+        letter-spacing: -1px;
+        line-height: 1.2;
+        text-align: center;
+        word-break: break-word;
+
+
+    }
 
     </style>
 </head>
@@ -53,13 +63,13 @@
               </nav><br>
               
             <div>
-                <p>10 Questions<button type="button" class="btn btn-primary" style="width: 140px; margin: 20px 200px 20px 20px;" >As a Questions</button> 
+                <p>{{totalQA}}Questions<button type="button" class="btn btn-primary" style="width: 140px; margin: 20px 200px 20px 20px;" >As a Questions</button> 
                     All <i class="fas fa-chevron-circle-down"> </i>
                     More Resecent <i class="fas fa-chevron-circle-down"> </i>
 
                 </p>
                 {% for question in posts%}
-                    <p style=" color: #031b4e; font-size: 25px;">  {{question["Title"]}} </p>
+                    <h3 style=" color: #031b4e;">  {{question["Title"]}} </h3>
                     <p>{{question["Body"]}}</p>
                     <p>{{question["BestAnswer"]}} Answer {{question["Created"]}} </p><br>
                   

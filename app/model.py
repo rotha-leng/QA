@@ -22,20 +22,21 @@ class MKT_USER(db.Model):
 
 class MKT_QUESTION(db.Model):
     ID = db.Column(db.Integer, primary_key = True)
-    Question_Tittle = db.Column(db.String(75))
-    Question_body = db.Column(db.Text)
-    Tag_Topic = db.Column(db.String(150))
+    Title = db.Column(db.String(75))
+    Body = db.Column(db.Text)
+    Tag = db.Column(db.String(150))
     Vote = db.Column(db.Integer)
     User = db.Column(db.Integer)
-    Best_Answer = db.Column((db.Integer))
+    BestAnswer = db.Column((db.Integer))
     Created = db.Column(db.String(20), default=datetime.datetime.utcnow)
 
-    def __init__(self,Question_Tittle, Question_body, Tag_Topic, Vote, User, Best_Answer,Created):
-        self.Question_Tittle = Tittle
-        self.Question_body = Body
-        self.Tag_Topic = Tag 
+    def __init__(self,Title, Body, Tag, Vote, User, BestAnswer,Created):
+        self.Title = Title
+        self.Body = Body
+        self.Tag = Tag
         self.Vote = Vote
         self.User = User
+        self.BestAnswer = BestAnswer
         self.Created = Created 
 
 class  MKT_ANSWER(db.Model):
@@ -43,35 +44,35 @@ class  MKT_ANSWER(db.Model):
     QuestionID = db.Column(db.Integer)
     Answer = db.Column(db.Text)
     User = db.Column(db.Integer)
-    Created_On = db.Column(db.String(10))
+    CreatedOn = db.Column(db.String(10))
 
-    def __init__(self, QuestionID, Answer, User, Created_On):
+    def __init__(self, QuestionID, Answer, User, CreatedOn):
         self.QuestionID = QuestionID
         self.Answer = Answer
         self.User = User
-        self.Created_On = CreatedOn
+        self.CreateOn = CreateOn
 
 class  MKT_VOTE(db.Model):
     ID = db.Column(db.Integer, primary_key = True)
-    Question_ID = db.Column(db.Integer)
-    User_ID = db.Column(db.Integer)
-    Created_On = db.Column(db.String(10))
+    QuestionID = db.Column(db.Integer)
+    UserID = db.Column(db.Integer)
+    CreateOn = db.Column(db.String(10))
 
-    def __init__(self,Question_ID, User_ID, Created_On):
-        self.Question_ID = Question
-        self.User_ID = User_ID
-        self.Created_On = CreatedOn
+    def __init__(self,QuestionID, UserID, CreateOn):
+        self.QuestionID =QuestionID
+        self.UserID = UserID
+        self.CreatedOn = CreatedOn
 class MKT_COMMENT(db.Model):
     ID = db.Column(db.Integer, primary_key = True)
-    Question_ID = db.Column(db.Integer)
+    QuestionID = db.Column(db.Integer)
     Comment = db.Column(db.Text)
-    User_ID = db.Column(db.Integer)
-    Created_On = db.Column(db.String(10))
-    def __init__(self, Question_ID, Comment, User_ID, Created_On):
-        self.Question_ID = Question
+    UserID = db.Column(db.Integer)
+    CreatedOn = db.Column(db.String(10))
+    def __init__(self, QuestionID, Comment, UserID, CreateOn):
+        self.QuestionID = QuestionID
         self.Comment = Comment
-        self.User_ID = User_ID
-        self.Created_On = CreatedOn
+        self.UserID = UserID
+        self.CreateOn = CreateOn
 
       
 

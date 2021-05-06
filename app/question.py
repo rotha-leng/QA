@@ -67,19 +67,19 @@ def btnFilter(condition):
         return render_template('home/index.html',question=question,totalQA=totalQA )
 
 class PostForm(Form):
-   Title = TextField("Question Title",[validators.Required("Please enter post title."), validators.Length(min=10, max=100, message="Post Title Cannot less than 10 or more then 100")])
-   Body = TextAreaField("Question Body",[validators.Required("Please enter post content.")])
-   Tag = TextField("Tag and Topic",[validators.Required("Select Tags for the Question")])
-   
+        Title = TextField("Question Title",[validators.Required("Please enter post title."), validators.Length(min=15, max=10000, message="Enter 15 Character or more")])
+        Body = TextAreaField("Question Body",[validators.Required("Please enter post content.")])
+        Tag = TextField("Tag and Topic",[validators.Required("Select Tags for the Question")])
+        
   
 
-   def validate_Title(form, field):
+def validate_Title(form, field):
    		title = field.data
    		postObj = MKT_QUESTION.query.filter_by(Title=title)
 
    		if postObj.first():
    			raise ValidationError(f'Post title {title} already exist!')
-  
+
 
 @app.route('/ask', methods=['GET','POST'])
 #@login_required
@@ -92,18 +92,20 @@ def askQuestion():
         if form.validate() == True:
 
             Title = request.form['Title']
-            Body = request.form['Body']
+            Body= request.form['Body']
             Tag = request.form['Tag']
-            Vote = request.form['Vote']
-            BestAnswer = request.form['BestAnswer']
-            User = request.form['User']
-            Created = request.form['Created']
+           
+           
+            #User = request.form['User']
+            
             #AuthorID = current_user.get_id()
 
-            Posts = MKT_QUESTION(Title = Title, Body = Body, Tag=Tag, Vote= Vote, BestAnswer=BestAnswer, User=User,Created=Created)
+            Posts = MKT_QUESTION(Title = Title, Body = Body, Tag=Tag)
 
             db.session.add(Posts)
             db.session.commit()
+            print(form)
+          
 
             flash('Your Post has been added successfully.')
 

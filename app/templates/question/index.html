@@ -2,9 +2,69 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-$END$
+  {% include 'base.html' %}
+  {% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+  {% endmacro %}
+
+  <div class="container-fluid" style="padding: 5%; margin: 0px 0px 0px 100px;">
+    <div class="row">
+      <div class="col-8">
+        {% for question in post %}
+        <h3 style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["Title"]}} </h3>
+          <p style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["Body"] | safe}}</p>
+            <p style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["BestAnswer"]}} Answer {{question["Created"]}} </p><br>
+           {% endfor %}      
+          <form action="" class="form" role="form" method="POST">
+            
+            <nav class="nav nav-pills nav-justified">
+            
+              <a class="nav-link active" style="background-color:white; color: darkblue;" href="/view">Add comment</a>
+           
+              <a class="nav-link" href="#">Subscript</a>
+              <a class="nav-link" href="#">Share</a>
+              <a class="nav-link" href="#">Report</a>
+            </nav>
+
+            {{ form.hidden_tag() }}
+              <div style="overflow: hidden;">
+                 {{ render_field(form.Comment, class='form-control', placeholder='Write your full question here...') }}
+                 <button type="button" class="btn btn-primary" style="width: 140px; float: right;">Comment</button><br>
+                 
+                 {{ render_field(form.Answer, class='form-control', placeholder='Write your full question here...') }}
+                 <button type="button" class="btn btn-primary" style="width: 140px; float: right;">Answer</button>
+               
+                 <div style="padding: 20px;"></div>
+                
+               <button type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: white; color:#0085ff;">Submit an Answer</button>
+              </div>
+         
+           </form>
+        <script src="https://cdn.tiny.cloud/1/lgfeziaxbazeuw63ihouu1n5kbd9p72t0spaeke17i36tqsn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+  <script>
+    tinymce.init({selector:'textarea',
+              setup: function (editor) {
+                      editor.on('change', function () {
+                          tinymce.triggerSave();
+                      });
+                  }
+            });
+
+  </script>
+       
 </body>
 </html>

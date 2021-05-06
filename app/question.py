@@ -7,6 +7,7 @@ from flask_wtf import Form
 from wtforms import TextField, TextAreaField, SubmitField
 from wtforms import validators,ValidationError
 import sqlalchemy
+from sqlalchemy import or_
 from sqlalchemy.sql.expression import cast
 
 
@@ -15,19 +16,7 @@ class searchQA(Form):
     searchbox = TextField("Search",[validators.Required("Please Enter your Title!")])
 @app.route('/', methods=['POST', 'GET'])
 def getPost():
-
-
-
     search = request.args.get('Search')
-    """Fetch all post records by author ID, or all
-    
-    Args:
-        postid (str, optional): if passed, ID of post to be displayed
-    
-    Returns:
-        post object: Post Object Record
-    """
-
     if search== None:
         totalQA = MKT_QUESTION.query.count()
         questions = db.session.query(MKT_QUESTION.Title,MKT_QUESTION.Body,MKT_QUESTION.BestAnswer,MKT_QUESTION.Created).all()
@@ -39,7 +28,7 @@ def getPost():
                 all()
         
     else:
-        #search = "%{}%.format"(search)
+        search = "%{}%.format"(search)
         questions = db.session.query(MKT_QUESTION.Title,MKT_QUESTION.Body,MKT_QUESTION.BestAnswer,MKT_QUESTION.Created).all()
         
         question = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Title, MTK_QUESTION.Body, 
@@ -50,7 +39,7 @@ def getPost():
                 MKT_QUESTION.Body.like("%"f"{search}""%"),
                 MKT_QUESTION.Tag.like("%"f"{search}""%")))
         totalQA = question.count()
-    return render_template('home/index.html',question=question,totalQA=totalQA )
+    return render_template('home/index.html',posts=questions,totalQA=totalQA )
         
                     
 def btnFilter(condition):
@@ -64,10 +53,10 @@ def btnFilter(condition):
                 join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric)==MKT_QUESTION.User).\
                 filter(MKT_QUESTION.Title.like("%Test1%"))
         totalQA = question.count()
-        return render_template('home/index.html',question=question,totalQA=totalQA )
+        return render_template('home/index.html',posts=questions,totalQA=totalQA )
 
 class PostForm(Form):
-        Title = TextField("Question Title",[validators.Required("Please enter post title."), validators.Length(min=15, max=10000, message="Enter 15 Character or more")])
+        Title = TextField("Question Title",[validators.Required("Please enter post title."), validators.Length(min=15, max=100, message="Enter 15 Character or more")])
         Body = TextAreaField("Question Body",[validators.Required("Please enter post content.")])
         Tag = TextField("Tag and Topic",[validators.Required("Select Tags for the Question")])
         
@@ -94,23 +83,46 @@ def askQuestion():
             Title = request.form['Title']
             Body= request.form['Body']
             Tag = request.form['Tag']
-           
-           
-            #User = request.form['User']
-            
-            #AuthorID = current_user.get_id()
 
             Posts = MKT_QUESTION(Title = Title, Body = Body, Tag=Tag)
 
             db.session.add(Posts)
             db.session.commit()
-            print(form)
-          
-
+            
             flash('Your Post has been added successfully.')
 
             return redirect(url_for('getPost'))
     return render_template('question/create.html', form=form)
+class CommentForm(Form):
+       
+        Comment = TextAreaField("Leave a Comment",[validators.Required("Please enter post content.")])
+        Answer = TextAreaField("Submit an answer",[validators.Required("Please enter post content.")])
+
+  
+"""
+def validate_Title(form, field):
+   		title = field.data
+   		postObj = MKT_COMMENT.query.filter_by(Title=title)
+
+   		if postObj.first():
+   			raise ValidationError(f'Post title {title} already exist!')
+"""
+@app.route('/view/<int:postid>')
+@app.route('/view/')
+@app.route('/view')
+def viewanswer(postid=''):
+    form = CommentForm()
+    if form.validate() == True:
+                    
+        Comment = request.form['Comment']
+        Posts = MKT_COMMENT(Comment=Comment)
+
+        db.session.add(Posts)
+        db.session.commit()
+        return redirect(url_for('viewanswer'))
+    return render_template('question/index.html',form=form)
+   
+   
 
 @app.route('/getRelatedPost')
 @login_required

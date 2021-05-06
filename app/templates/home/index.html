@@ -6,9 +6,7 @@
     <title>Project_Flask</title>
     <link rel="stylesheet" href="{{ url_for('static', filename = 'style.css') }}">
     <script src="https://kit.fontawesome.com/d118e75654.js" crossorigin="anonymous"></script>
-    
-
-    
+  
 </head>
 <body>
 
@@ -23,16 +21,16 @@
                 </form><br>
               </nav><br>
               
-            <div>
+            <div class="container" >
                 <p class="text-center">{{totalQA}}Questions<a href="/ask"> <button type="button" class="btn btn-primary" style="width: 140px; margin: 20px 200px 20px 20px;">As a Questions</button> </a>
                     All <i class="fas fa-chevron-circle-down" style="padding: 10px;"> </i>
                     More Resecent <i class="fas fa-chevron-circle-down"  style="padding: 10px;"> </i>
 
                 </p>
                 {% for question in posts%}
-                    <h3 style=" color: #031b4e;">{{question["Title"]}} </h3>
-                    <p>{{question["Body"]}}</p>
-                    <p>{{question["BestAnswer"]}} Answer {{question["Created"]}} </p><br>
+                    <a href="view"><h3 style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["Title"]}} </h3> </a>
+                    <p style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["Body"] | safe}}</p>
+                    <p style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["BestAnswer"]}} Answer {{question["Created"]}} </p><br>
                   
                {% endfor %}
             </div>   

@@ -7,27 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-<!--   
-<style>
-  .form-control{
-    width: 300px;
-    margin: 0px 0px 0px 200px;
-  }
-  Title{
-   text-align: center;
-   float: left;
-  }
-  Body{
-   text-align: center;
-   float: left;
-  }
-  .btn btn-primary{
-    width: 200px;
-    background-color: blue;
-  }
- 
-</style> -->
- 
+
 </head>
 <body>
   {% include 'base.html' %}
@@ -43,9 +23,6 @@
 {% endif %}
 </dd>
 {% endmacro %}
-
-
-
   <div class="container-fluid" style="padding: 5%; margin: 0px 0px 0px 100px;">
     <div class="row">
       <div class="col-8">
@@ -64,16 +41,12 @@
                 
                 <div style="padding: 20px;"></div>
                  <button type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: white; color:#0085ff;">Post My Question</button>
-           
         </form>
-  
       </div>
-     
     </div>
+    
+
   </div>
-  
-  
- 
   <script src="https://cdn.tiny.cloud/1/lgfeziaxbazeuw63ihouu1n5kbd9p72t0spaeke17i36tqsn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
   <script>
     tinymce.init({selector:'textarea',
@@ -84,7 +57,7 @@
                   }
             });
   </script>
-    <script>
+    <!-- <script>
       $(document).ready(function() {
         $('#Title').on('keyup', function(){
   
@@ -109,14 +82,11 @@
             })	
         })
       });
-    </script>
+    </script> -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-
-  
-  
 </body>
 </html>

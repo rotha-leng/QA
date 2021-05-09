@@ -1,20 +1,79 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        .card-block{
+        border: 2px solid black;
+        }
+        .card-block input{
+           text-color: black;
+           border-style: groove;
+        }
 
-{% extends 'base.html' %}
+        .card-block p{
+        text-align: center;
+        font-size: 20px;
+        }
+        #save:hover{
+        background-color:grey;
+        color: white;
+        }
+    </style>
 
-{% block content %}
-	<h2>New Post</h2>
-	<hr>
-	 {% for post in posts %}
-	     <a href="{{ url_for('getPost', postid=post['ID']) }}">
-	         <h2>{{ post['Title'] }}</h2>
-	     </a>
-	     <span class="post-date">{{ post['Created'].split(' ')[0] }}</span>
-	     <p>{{ post['Content']|safe }}</p>
-	     <span class="post-author">By - {{ post['AuthorName'] }}</span>
-	     <hr>
-	 {% endfor %}
+</head>
+<body>
+
+{% include 'base.html' %}
+
+<div class="container">
+    <div id="loginbox" style="margin-top: 60px;" class="mainbox col-lg-6 offset-md-3 col-md-8 offset-sm-2">
+        <div class="card card-inverse card-info">
+            <div style="padding-top: 30px;" class="card-block">
+                <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
+                <h2 style="text-align:center">My Profile</h2>
+                <form action="/show" id="loginform" class="" role="form" method="POST" enctype = "multipart/form-data"><br>
+                    <div style="margin-bottom: 35px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="firstname" type="text" class="form-control" name="firstname"  placeholder="First Name" />
+                    </div>
+                    <div style="margin-bottom: 35px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                        <input id="last_name" type="text" class="form-control" name="lastname"  placeholder="Last Name" />
+                    </div>
+                    <div style="margin-bottom: 35px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                        <input id="file" type="file"  name="file" value="file" />
+                    </div>
+
+                    <p ><input style="padding: 10px; width: 100px;" id="save" type = "submit" value = "Save"/></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
 
 
+
+
+
+
+
+
+
+
+{% block js %}
+	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('table.mypost').DataTable()
+		});
+	</script>
 {% endblock %}
 

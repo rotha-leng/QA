@@ -1,70 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
+  <script src="https://kit.fontawesome.com/d118e75654.js" crossorigin="anonymous"></script>
+  <title>View Question</title>
 </head>
+
 <body>
   {% include 'base.html' %}
   {% macro render_field(field) %}
-  <dt>{{ field.label }}
+  <dt>{{ field.label }}</dt>
   <dd>{{ field(**kwargs)|safe }}
-  {% if field.errors %}
+    {% if field.errors %}
     <ul class=errors>
-    {% for error in field.errors %}
+      {% for error in field.errors %}
       <li>{{ error }}</li>
-    {% endfor %}
+      {% endfor %}
     </ul>
-  {% endif %}
+    {% endif %}
   </dd>
+
   {% endmacro %}
+  <br>
+ 
+  <div class="row">
+    <div class="col-8">
+      <p style="text-align:left;margin: 100px 0px 0px 200px"> QUESTION</p>
+  
+      <h2 style=" color: #031b4e; margin: 0px 0px 0px 140px;"><i class="far fa-heart btn-lg"
+         style="background-color: white;color: black;"></i> {{posts["Question_Tittle"]}} </h2>
 
-  <div class="container-fluid" style="padding: 5%; margin: 0px 0px 0px 100px;">
-    <div class="row">
-      <div class="col-8">
-        {% for question in post %}
-        <h3 style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["Title"]}} </h3>
-          <p style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["Body"] | safe}}</p>
-            <p style=" color: #031b4e; text-align: left; margin: 0px 0px 0px 150px;">{{question["BestAnswer"]}} Answer {{question["Created"]}} </p><br>
-           {% endfor %}      
-          <form action="" class="form" role="form" method="POST">
-            
-            <nav class="nav nav-pills nav-justified">
-            
-              <a class="nav-link active" style="background-color:white; color: darkblue;" href="/view">Add comment</a>
-           
-              <a class="nav-link" href="#">Subscript</a>
-              <a class="nav-link" href="#">Share</a>
-              <a class="nav-link" href="#">Report</a>
-            </nav>
+      <h5 style=" color: #031b4e; text-align:left; margin: 0px 0px 0px 200px">{{posts["Question_body"] |safe}}</h5>
+      <p style=" color: #404040; text-align:left; margin: 0px 0px 0px 200px">{{posts["Best_Answer"]}} Answers -
+        {{posts["Created"]}} - By-{{posts["FullName"]}} - <strong
+          style="padding:3px;background-color:grey;color:white">{{posts["Tag_Topic"]}}</strong></p>
+      <br><br><br>
+ 
+      <nav style="text-align:left; margin: 0px 0px 0px 190px" class="nav nav-pills nav-justified">
 
-            {{ form.hidden_tag() }}
-              <div style="overflow: hidden;">
-                 {{ render_field(form.Comment, class='form-control', placeholder='Write your full question here...') }}
-                 <button type="button" class="btn btn-primary" style="width: 140px; float: right;">Comment</button><br>
-                 
-                 {{ render_field(form.Answer, class='form-control', placeholder='Write your full question here...') }}
-                 <button type="button" class="btn btn-primary" style="width: 140px; float: right;">Answer</button>
-               
-                 <div style="padding: 20px;"></div>
-                
-               <button type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: white; color:#0085ff;">Submit an Answer</button>
-              </div>
-         
-           </form>
-        <script src="https://cdn.tiny.cloud/1/lgfeziaxbazeuw63ihouu1n5kbd9p72t0spaeke17i36tqsn/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+        <a class="nav-link active" style="background-color:white; color: darkblue;" href="/view">Add comment</a>
+        <a class="nav-link" href="#" style="background-color:white; color: darkblue;">Subscript</a>
+        <a class="nav-link" href="#" style="background-color:white; color: darkblue;">Share</a>
+        <a class="nav-link" href="#" style="background-color:white; color: darkblue;">Report</a>
+      </nav><br>
+      <form action="/" method="POST">
+        {{ form.hidden_tag() }}
+        <div style="text-align:left; margin: 0px 0px 0px 150px; padding: 50px; width:600px">
+          
+          {{ render_field(form.Comment, class='form-control', placeholder='Leave a comment...') }}
+          <button type="submit" class="btn btn-primary" style="width: 140px; float: right;">Comment</button>
+          <br><br>
+          <br>
+           {{ render_field(form.Comment, class='form-control', placeholder='Leave a comment...') }}
+          <button type="submit" class="btn btn-primary" style="width: 140px; float: right;">Answer</button>
+          <br><br>
+          <br>
+
+        </div>
+      </form>
+    </div>
+    <div class="col related_post" style="width: 200px;  margin: 100px 0px 0px 100px">
+      <h2 style="color: #031b4e ; padding: 10px;">RELATED</h2>
+      <div class="box" style="border: 1px solid #d0d4d8;width: 100px; ">
+        <i class="fas fa-globe" style="margin: 0px 0px 0px 40px;"></i>
+        <br>
+        <p style="text-align: center; font-size: 15px;">Intant DNS<br>
+          look up tool<br>
+          <a href="#" style="text-align: center;">Tool</a>
+        </p>
+        <div class="related">
+          
+
+        </div>
+      
+      </div>
+      {% for question in questionrelated %}
+          {{question["Question_Tittle"]}}
+          <br></i><p style="color:#0085ff ;"><i class="far fa-question-circle"></i> Question</p>
+        {% endfor %}
+    </div>
+    <br>
+  </div>
+  <script src="https://cdn.tiny.cloud/1/lgfeziaxbazeuw63ihouu1n5kbd9p72t0spaeke17i36tqsn/tinymce/5/tinymce.min.js"
+    referrerpolicy="origin"></script>
   <script>
-    tinymce.init({selector:'textarea',
-              setup: function (editor) {
-                      editor.on('change', function () {
-                          tinymce.triggerSave();
-                      });
-                  }
-            });
+    tinymce.init({
+      selector: 'textarea',
+      setup: function (editor) {
+        editor.on('change', function () {
+          tinymce.triggerSave();
+        });
+      }
+    });
 
   </script>
-       
+ 
+ 
 </body>
+
 </html>

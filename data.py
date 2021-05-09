@@ -3,9 +3,14 @@ from app.model import *
 import datetime
 
 # Post Sample Data
-post_first =MKT_QUESTION (Title ="Customer Images Status Pending", Body="I am upload a kaliLnux",BestAnswer=1, Tag=" Python",Vote=1, User=1, Created= datetime.datetime.now().strftime("%Y-%m-%d"))
-post_second =MKT_QUESTION (Title ="Is it posible to point a subdirectory to another domain?", Body="I maybe asking a stupid question here ", BestAnswer=1, Tag="C++",Vote=1, User=1,Created=datetime.datetime.now().strftime("%Y-%m-%d"))
-post_third =MKT_QUESTION (Title ="Set Up With Domain", Body="I am upload a kaliLnux",BestAnswer=1, Tag="SQL ",Vote=1, User=1,Created=datetime.datetime.now().strftime("%Y-%m-%d"))
+"""post_first = MKT_COMMENT(Question_ID=1, Comment="Hello", User_ID=1, Created_On="")
+post_second = MKT_COMMENT(Question_ID=2, Comment="Nice", User_ID=2, Created_On="")
+post_third = MKT_COMMENT(Question_ID=3, Comment="bye", User_ID=3, Created_On="")"""
+
+post_first = MKT_ANSWER(QuestionID=1, Answer="you should", User=1, Created_On="")
+post_second = MKT_ANSWER(QuestionID=1, Answer="you try", User=2, Created_On="")
+post_third = MKT_ANSWER(QuestionID=1, Answer="you add", User=3, Created_On="")
+
 
 db.session.add(post_first)
 
@@ -14,4 +19,3 @@ db.session.add(post_second)
 db.session.add(post_third)
 
 db.session.commit()
-

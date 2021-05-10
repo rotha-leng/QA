@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 
-    <title>Flask_project</title>
+    <title>QUESTION</title>
     <style>
      body{
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ;
@@ -24,20 +24,20 @@
     {% if current_user.is_authenticated %}
     <div class="navbar-header">
       <a style="color: #031b4e" class="navbar-brand" href="/">QUESTION |</a>
-      <a style="color: #031b4e" class="navbar-brand" href="/aboutpage">ABOUT |</a>
+
       <a style="color: #031b4e" class="navbar-brand" href="/ManagePost">MY POST</a>
+      <a href="/Logout"><button style="background-color:#0085ff ;color: white" class="btn btn navbar-btn">LOG OUT</button></a>
       {% else %}
       <div class="navbar-header">
       <a style="color: #031b4e" class="navbar-brand" href="/">QUESTION |</a>
          <a style="color: #031b4e" class="navbar-brand" href="/register">SIGN UP</a>
         <a href="/Login"><button style="background-color:#0085ff ;color: white; float: right" class="btn btn navbar-btn">LOG IN</button></a>
       </div>
+      </div>
       {% endif %}
-    </div>
-    {% if current_user.is_authenticated %}
-    <a href="/Logout"><button style="background-color:#0085ff ;color: white" class="btn btn navbar-btn">LOG OUT</button></a>
+
   </div>
 </nav>
-  {% endif %}
+
   </body>
 </html>

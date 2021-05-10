@@ -7,7 +7,7 @@ from sqlalchemy.sql.expression import cast
 
 import datetime
 
-from flask import render_template, request, url_for, flash, redirect, jsonify
+from flask import render_template, request, url_for, flash, redirect, jsonify, json
 
 from werkzeug.exceptions import abort
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -16,7 +16,8 @@ from flask_wtf import Form
 from wtforms import TextField, TextAreaField, SubmitField, PasswordField
 from wtforms import validators, ValidationError
 from sqlalchemy import or_
-#from flask_moment import Moment
+
+
 
 
 
@@ -32,16 +33,11 @@ def getPost():
 		question = db.session.\
 			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic,MKT_QUESTION.Created, MKT_USER.FullName). \
 			join(MKT_USER, MKT_USER.ID == MKT_QUESTION.User). \
-			all()
-
+		order_by(MKT_QUESTION.Created.desc()). \
+		all()
 
 	else:
 		search = "%{}%".format(search)
-		"""questions = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic, MKT_QUESTION.Best_Answer,
-									 MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Question_ID, MKT_ANSWER.QuestionID). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.User). \
-			all()"""
-
 
 		question = db.session.\
 			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic,MKT_QUESTION.Created, MKT_USER.FullName). \
@@ -51,35 +47,17 @@ def getPost():
 				MKT_QUESTION.Question_body.like("%"f"{search}""%"),
 		        MKT_QUESTION.Tag_Topic.like("%"f"{search}""%")))
 		totalQA = question.count()
+
+
 	return render_template('home/index.html', posts=question, totalQA=totalQA)
 
 
-"""def btnFilter(condition):
-	if condition == None:
-		return redirect(url_for('getPost'))
-	else:
-
-		questions = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body,
-									 MKT_QUESTION.Tag_Topic, MKT_QUESTION.Best_Answer,
-									 MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Question_ID,
-									 MKT_ANSWER.QuestionID). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.User). \
-			all()
-
-
-		question = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body,
-									MKT_QUESTION.Tag_Topic, MKT_QUESTION.Vote, MKT_QUESTION.User, MKT_QUESTION.Best_Answer,
-									MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Question_ID). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.User). \
-			filter(MKT_QUESTION.Question_Tittle.like("%Test1"))
-		totalQA = question.count()
-		return render_template('home/index.html', posts=question, totalQA=totalQA)"""
 
 @app.route('/All')
 def all():
 	totalQA = MKT_QUESTION.query.count()
 	question = db.session.\
-			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic,MKT_QUESTION.Created, MKT_USER.FullName). \
+			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic, MKT_QUESTION.Created, MKT_USER.FullName). \
 			join(MKT_USER, MKT_USER.ID == MKT_QUESTION.User). \
 		all()
 	return render_template('home/index.html', posts=question, totalQA=totalQA)
@@ -97,9 +75,9 @@ def mostrecent():
 
 
 class PostForm(Form):
-	username = TextField(" Full Name :", [validators.Required("Enter a name"), validators.Length(min=5, max=15, message="Full Name Cannot less than 5 or more then 30")])
+	username = TextField(" Full Name :", [validators.Required("Enter a name"), validators.Length(min=5, max=20, message="Full Name Cannot less than 5 or more then 20")])
 	EmailAddress = TextField(" Email Address :", [validators.Required("Enter your email address")])
-	password = PasswordField(" Password :", [validators.Required("Create a password"), validators.Length(min=1, max=15, message="Password Cannot less than 1 or more then 15")])
+	password = PasswordField(" Password :", [validators.Required("Create a password"), validators.Length(min=6,  message="Password Cannot less then 6")])
 
 
 	def validate_EmailAddress(form, field):
@@ -159,10 +137,9 @@ class AskForm(Form):
 
 
 @app.route('/ask', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def askQuestion():
 	form = AskForm()
-
 	if request.method == 'POST':
 
 		if form.validate() == True:
@@ -176,8 +153,6 @@ def askQuestion():
 			db.session.add(Posts)
 			db.session.commit()
 
-			flash('Your Post has been added successfully.')
-
 			return redirect(url_for('getPost'))
 	return render_template('question/create.html', form=form)
 
@@ -190,123 +165,176 @@ def logout():
 	return redirect(url_for('index'))
 
 
+
+def getRelatedPost(search):
+	# search = request.args.get('Search')
+	# postList = []
+	print('search:', search)
+	if search:
+		postObj = MKT_QUESTION.query.limit(5).all()
+		# .filter(MKT_QUESTION.Question_Tittle.contains(search))\
+
+		return postObj
+	return ''
+
+
+class CommentForm(Form):
+	Comment = TextField("Leave a comment", [validators.Required("Please enter post content.")])
+	Answer = TextAreaField("Submit an answer", [validators.Required("Please enter post content.")])
+	btncomment = SubmitField("Comment")
+	btnanswer = SubmitField("Answer")
+	vote = SubmitField("vote")
+
+
+@app.route('/View/Question/<int:QuestionID>')
+def ViewQuestionAnswer(QuestionID=''):
+	form = CommentForm()
+
+	if QuestionID == '':
+
+
+		totalV = MKT_VOTE.query.count()
+		Question = db.session.\
+			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic, MKT_QUESTION.Created, MKT_USER.FullName). \
+			join(MKT_USER, MKT_USER.ID == MKT_QUESTION.User).all()
+
+		Answer = MKT_ANSWER.query.all()
+		totalA = len(Answer)
+
+		Comment = MKT_COMMENT.query.all()
+		totalcmt = len(Comment)
+
+		ID = current_user.get_id()
+		user = MKT_USER.query.get(ID)
+
+		Vote = db.session.query(MKT_VOTE.ID).filter(MKT_VOTE.Question_ID == QuestionID).all()
+
+
+	else:
+
+		Question = db.session.\
+			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic, MKT_QUESTION.Created, MKT_USER.FullName). \
+			join(MKT_USER, MKT_USER.ID == MKT_QUESTION.User).filter(MKT_QUESTION.ID == QuestionID)
+
+		Answer = db.session.query(MKT_ANSWER.Answer, MKT_USER.FullName, MKT_ANSWER.Created_On).join(MKT_USER, MKT_USER.ID == MKT_ANSWER.User).filter(MKT_ANSWER.QuestionID == QuestionID).all()
+		totalA = len(Answer)
+
+		Comment = db.session.query(MKT_COMMENT.Comment, MKT_USER.FullName, MKT_COMMENT.Created_On).join(MKT_USER, MKT_USER.ID == MKT_COMMENT.User_ID).\
+			filter(MKT_COMMENT.Question_ID == QuestionID).all()
+		totalcmt = len(Comment)
+
+		ID = current_user.get_id()
+		user = MKT_USER.query.get(ID)
+
+		Vote = db.session.query(MKT_VOTE).join(MKT_USER, MKT_USER.ID == MKT_VOTE.User_ID).filter(MKT_VOTE.Question_ID == QuestionID).all()
+		totalV = len(Vote)
+		if Question.first() is None:
+			abort(404)
+
+	return render_template('question/index.html', Question=Question, form=form, Answer=Answer, Comment=Comment, vote=totalV, Vote=Vote, TotalA=totalA, User=user, Totalcmt=totalcmt)
+
+
+@app.route('/Answer/Question/<int:QuestionID>', methods=["POST"])
+def AnswerQuestion(QuestionID):
+	form = CommentForm()
+	if request.method == 'POST':
+
+		if form.validate() == False:
+			AnswerGet = request.form['Answer']
+			AuthorID = current_user.get_id()
+			Question = MKT_ANSWER(QuestionID=QuestionID, Answer=AnswerGet, User=AuthorID, Created_On=datetime.datetime.now().strftime("%d-%m-%Y"))
+			db.session.add(Question)
+			db.session.commit()
+
+			return redirect(url_for('index'))
+
+	return render_template('question/index.html', form=form)
+
+
+@app.route('/Comment/Question/<int:QuestionID>', methods=["GET", "POST"])
+def CommentQuestion(QuestionID):
+	form = CommentForm()
+
+	if request.method == 'POST':
+
+		if form.validate() == False:
+			CommentGet = request.form['Comment']
+			AuthorID = current_user.get_id()
+			Comment = MKT_COMMENT(Question_ID=QuestionID, Comment=CommentGet, User_ID=AuthorID, Created_On=datetime.datetime.now().strftime("%d-%m-%Y"))
+
+			db.session.add(Comment)
+			db.session.commit()
+
+			return redirect(url_for('index'))
+
+	return render_template('question/index.html', form=form)
+
+
 @app.route('/ManagePost')
 @login_required
 def managePost():
 	ID = current_user.get_id()
 
 	authorObj = MKT_USER.query.get(ID)
-	postByAuthObj = MKT_QUESTION.query.filter_by(Question_Tittle=str(ID)).all()
+	print(authorObj)
+	postByAuthObj = MKT_QUESTION.query.filter_by(User=str(ID)).all()
+	print(postByAuthObj)
 	if postByAuthObj:
-
-		return render_template('question/index.html', posts=postByAuthObj, user=authorObj)
+		return render_template('question/update.html', Question=postByAuthObj, user=authorObj)
 	else:
-		return render_template('question/index.html')
+		return render_template('question/update.html')
+
+@app.route('/View/Question/<int:QuestionID>/Delete')
+@login_required
+def deletePost(QuestionID):
+	if QuestionID:
+		MKT_QUESTION.query.filter_by(ID=QuestionID).delete()
+		db.session.commit()
+		flash(f'Post {QuestionID} has been deleted successfull')
+	return redirect(url_for('managePost'))
 
 
-#@app.route('/getRetatedPost')
-#@login_required
-def getRelatedPost(search):
-	#search = request.args.get('Search')
-	#postList = []
-	print('search:',search)
-	if search:
-		postObj = MKT_QUESTION.query.limit(2).all()
-			#.filter(MKT_QUESTION.Question_Tittle.contains(search))\
-		 
-			
+@app.route('/View/Question/<int:QuestionID>/Edit', methods=['GET', 'POST'])
+@login_required
+def editPost(QuestionID=''):
+	form = AskForm()
 
-		return postObj
-	return ''
+	if request.method == 'POST':
+		PostObj = MKT_QUESTION.query. \
+			filter_by(ID=QuestionID). \
+			first()  # .update({'Content':request.form['Content']})
 
-@app.route('/comment', methods=['POST', 'GET'])
-def comment():
-	comment = db.session.query(MKT_COMMENT.Comment).all()
-	print(comment)
-	return render_template('question/index.html', comments=comment)
+		PostObj.Question_Title = request.form['Title']
+		PostObj.Question_body = request.form['Content']
+		PostObj.Tag_Topic = request.form['Tag']
+		db.session.commit()
+		flash("Your Update Successful!")
+
+	if QuestionID:
+		postobj = MKT_QUESTION.query.get(QuestionID)
+
+		if postobj:
+			form.Title.data = postobj.Question_Tittle
+			form.Body.data = postobj.Question_body
+			form.Tag.data = postobj.Tag_Topic
+			return render_template('question/create.html', form=form)
+	abort(404)
 
 
-class CommentForm(Form):
-	Comment = TextField("Leave a comment", [validators.Required("Please enter post content.")])
-	Answer = TextField("Submit an answer", [validators.Required("Please enter post content.")])
-	Submit = SubmitField("Send")
 
-@app.route('/View/Question/<int:QuestionID>', methods=['POST', 'GET'])
-def view(QuestionID=''):
+@app.route('/Upvote/Question/<int:QuestionID>', methods=["GET", "POST"])
+def upvote1(QuestionID):
 	form = CommentForm()
-	if QuestionID == '':
-		Question =  db.session.\
-			query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic,MKT_QUESTION.Created, MKT_USER.FullName). \
-			join(MKT_USER, MKT_USER.ID == MKT_QUESTION.User). \
-			all()
 
-		"""comment = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body,
-								   MKT_QUESTION.Tag_Topic, MKT_QUESTION.Vote, MKT_QUESTION.User,
-								   MKT_QUESTION.Best_Answer,
-								   MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Comment). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.ID). \
-			all()
+	if request.method == 'POST':
 
-		answer = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body,
-								   MKT_QUESTION.Tag_Topic, MKT_QUESTION.Vote, MKT_QUESTION.User,
-								   MKT_QUESTION.Best_Answer,
-								   MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Comment, MKT_ANSWER.Answer). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.ID). \
-			all()"""
-
-	else:
-        
-		Question =  db.session.\
-			query(MKT_QUESTION.Question_Tittle,MKT_QUESTION.Question_body,MKT_QUESTION.Tag_Topic,MKT_QUESTION.Vote,MKT_QUESTION.User,MKT_QUESTION.Created,MKT_USER). \
-			join(MKT_USER, MKT_USER.ID == MKT_QUESTION.User). \
-            filter(MKT_QUESTION.ID == QuestionID).first()
-		print(Question.User)
-
-		"""comment = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body,
-								   MKT_QUESTION.Tag_Topic, MKT_QUESTION.Vote, MKT_QUESTION.User,
-								   MKT_QUESTION.Best_Answer,
-								   MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Comment). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.ID). \
-			filter(MKT_QUESTION.ID == QuestionID)
-
-
-		answer = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body,
-								   MKT_QUESTION.Tag_Topic, MKT_QUESTION.Vote, MKT_QUESTION.User,
-								   MKT_QUESTION.Best_Answer,
-								   MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Comment, MKT_ANSWER.Answer). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.ID). \
-			filter(MKT_QUESTION.ID == QuestionID)
-		print(answer)"""
-		questionrelated=getRelatedPost(Question.Question_Tittle)
-
-
-		
-
-
-		if Question is None:
-			abort(404)
-
-	"""if request.method == 'POST':
-		if form.validate() == True:
-			comment = request.form['Comment']
-			postcomment = MKT_COMMENT(Comment=comment)
-			db.session.add(postcomment)
+		if form.validate() == False:
+			AuthorID = current_user.get_id()
+			vote = MKT_VOTE(Question_ID=QuestionID, User_ID=AuthorID, Created_On=datetime.datetime.now().strftime("%Y-%m-%d"))
+			db.session.add(vote)
 			db.session.commit()
 
-			answer = request.form['Answer']
-			answer = MKT_ANSWER(Answer=answer)
-			db.session.add(answer)
-			db.session.commit()"""
+			return redirect(url_for('index'))
 
-		#return redirect(url_for('view'))
-	#Answer = MKT_ANSWER.query.all()
-	return render_template('question/index.html', form=form, posts=Question,questionrelated=questionrelated)
-
-
-"""questions = db.session.query(MKT_QUESTION.ID, MKT_QUESTION.Question_Tittle, MKT_QUESTION.Question_body, MKT_QUESTION.Tag_Topic, MKT_QUESTION.Best_Answer,
-									 MKT_QUESTION.Created, MKT_USER.FullName, MKT_COMMENT.Question_ID, MKT_ANSWER.QuestionID). \
-			join(MKT_USER, cast(MKT_USER.ID, sqlalchemy.Numeric) == MKT_QUESTION.User). \
-			order_by(MKT_QUESTION.Created.desc()). \
-			all()"""
-
+	return render_template('question/index.html', form=form)
 

@@ -3,10 +3,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>PROFILE</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
     <style>
         .card-block{
         border: 2px solid black;
@@ -24,43 +25,50 @@
         background-color:grey;
         color: white;
         }
+
+
     </style>
 
 </head>
 <body>
 
 {% include 'base.html' %}
+<h2 style="color:#0085ff" class="text-center"> Post By {{user['FullName']}}</h2>
+<h6 style="color:#0085ff" class="text-center"> Logged in as {{user['FullName']}}</h6>
+	<table style="width: 100%" class="table mypost">
+		<thead style="color:#0085ff">
+		<th>Question Tittle</th>
+		<th>Question Body</th>
+		<th>Tag Topic</th>
+		<th>Actions</th>
+		</thead>
+		{% for post in Question %}
+		<tbody>
+		<br>
+			<tr style="color: #031b4e">
+				<td onclick="window.open('/View/Question/{{post['ID']}}')" style="cursor: pointer;">{{post['Question_Tittle']}}</td>
+				<td onclick="window.open('/View/Question/{{post['ID']}}')" style="cursor: pointer;">{{post['Question_body'] | safe}}</td>
+				<td onclick="window.open('/View/Question/{{post['ID']}}')" style="cursor: pointer;">{{post['Tag_Topic']}}</td>
+				<td>
+					<a href="/View/Question/{{post['ID'] }}/Edit">Edit</a>
+					<a href="/View/Question/{{ post['ID'] }}/Delete" class="text-danger">Delete</a>
+					{% endfor %}
+				</td>
+			</tr>
 
-<div class="container">
-    <div id="loginbox" style="margin-top: 60px;" class="mainbox col-lg-6 offset-md-3 col-md-8 offset-sm-2">
-        <div class="card card-inverse card-info">
-            <div style="padding-top: 30px;" class="card-block">
-                <div style="display: none;" id="login-alert" class="alert alert-danger col-md-12"></div>
-                <h2 style="text-align:center">My Profile</h2>
-                <form action="/show" id="loginform" class="" role="form" method="POST" enctype = "multipart/form-data"><br>
-                    <div style="margin-bottom: 35px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="firstname" type="text" class="form-control" name="firstname"  placeholder="First Name" />
-                    </div>
-                    <div style="margin-bottom: 35px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <input id="last_name" type="text" class="form-control" name="lastname"  placeholder="Last Name" />
-                    </div>
-                    <div style="margin-bottom: 35px;" class="input-group"> <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <input id="file" type="file"  name="file" value="file" />
-                    </div>
 
-                    <p ><input style="padding: 10px; width: 100px;" id="save" type = "submit" value = "Save"/></p>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+
+		</tbody>
+
+	</table>
+
+
+
+
+
 
 </body>
 </html>
-
-
-
-
 
 
 
@@ -72,7 +80,7 @@
 	<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
 	<script>
 		$(document).ready(function() {
-			$('table.mypost').DataTable()
+			$('table.mypost').DataTable(100)
 		});
 	</script>
 {% endblock %}

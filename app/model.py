@@ -39,14 +39,15 @@ class MKT_QUESTION(db.Model):
     Best_Answer = db.Column((db.Integer))
     Created = db.Column(db.String(20), default=datetime.datetime.utcnow)
 
-    def __init__(self, Question_Tittle, Question_body, Tag_Topic, Vote, User, Best_Answer, Created):
-        self.Question_Tittle = Question_Tittle
-        self.Question_body = Question_body
-        self.Tag_Topic = Tag_Topic
-        self.Vote = Vote
-        self.User = User
-        self.Best_Answer = Best_Answer
-        self.Created = Created
+
+def __init__(self, Question_Tittle, Question_body, Tag_Topic, Vote, User, Best_Answer, Created):
+    self.Question_Tittle = Question_Tittle
+    self.Question_body = Question_body
+    self.Tag_Topic = Tag_Topic
+    self.Vote = Vote
+    self.User = User
+    self.Best_Answer = Best_Answer
+    self.Created = Created
 
 class  MKT_ANSWER(db.Model):
     ID = db.Column(db.Integer, primary_key=True)

@@ -6,13 +6,13 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>ASK QUESTION</title>
 
 </head>
 <body>
   {% include 'base.html' %}
 {% macro render_field(field) %}
-<dt>{{ field.label }}</dt>
+<dt>{{ field.label }}
 <dd>{{ field(**kwargs)|safe }}
 {% if field.errors %}
   <ul class=errors style="color:red">
@@ -35,13 +35,13 @@
         <form action="/ask" class="form" role="form" method="POST">
             {{ form.hidden_tag() }}
 
-                 {{ render_field(form.Question_Tittle, class='form-control', placeholder='How to Set Up Automatic...') }}<br>
+                 {{ render_field(form.Title, class='form-control', placeholder='How to Set Up Automatic...') }}<br>
 
-                 {{ render_field(form.Question_nody, class='form-control', placeholder='Write your full question here...') }}<br>
+                 {{ render_field(form.Body, class='form-control', placeholder='Write your full question here...') }}<br>
 
-                 {{ render_field(form.Tag_Topic, class='form-control', placeholder='Select Tages for the Question') }}<br>
+                 {{ render_field(form.Tag, class='form-control', placeholder='Select Tages for the Question') }}<br>
 
-                <div style="padding: 40px;"></div>
+                <div style="padding: 20px;"></div>
                  <button id="" type="submit" class="btn btn-primary btn-lg btn-block" style="background-color: white; color:#0085ff;">Post My Question</button>
 
         </form>
@@ -63,7 +63,32 @@
                   }
             });
   </script>
-   
+    <script>
+      $(document).ready(function() {
+        $('#Title').on('keyup', function(){
+
+          title = $(this).val()
+
+            $.ajax({
+              url: '/getRelatedPost',
+              type: 'GET',
+              data: {title: title},
+            })
+            .done(function(data) {
+              li = '<ul>'
+              $.each(data, function(index, val) {
+                 /* iterate through array or object */
+                 // console.log(val.title)
+                 li +='<li><a href="/Post/'+val.id+'">'+val.title+'</a></li>'
+              });
+              li += '</ul>'
+
+              $('div.related_post').find('div.related').html(li)
+
+            })
+        })
+      });
+    </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
